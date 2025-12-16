@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Filter Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .reset-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Filter Application</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_image">Upload Image:</label>
+                {{ form.image }}
+                <div class="help-text">Supported formats: JPG, PNG, BMP</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_filter_choice">Filter Type:</label>
+                {{ form.filter_choice }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_kernel_size">Kernel Size:</label>
+                {{ form.kernel_size }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_custom_kernel">Custom Kernel (optional):</label>
+                {{ form.custom_kernel }}
+                <div class="help-text">
+                    Enter comma-separated values. For 3x3 kernel: 1,1,1,1,1,1,1,1,1
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    {{ form.continue_filtering }} Continue filtering with current result
+                </label>
+                <div class="help-text">
+                    Check this to apply another filter on the processed image
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Apply Filter</button>
+        </form>
+
+        {% if request.session.processed_image %}
+            <a href="{% url 'reset_filtering' %}" class="reset-btn">Start Over with New Image</a>
+        {% endif %}
+    </div>
+</body>
+</html>
