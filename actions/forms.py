@@ -1,3 +1,5 @@
+
+# forms.py (updated)
 from django import forms
 
 class ImageUploadForm(forms.Form):
@@ -9,7 +11,12 @@ class ImageUploadForm(forms.Form):
             ('box', 'Box Blur (Mean)'),
             ('median', 'Median Filter'),
             ('sharpen', 'Sharpen'),
-            ('edge', 'Edge Detection'),
+            ('edge_sobel', 'Edge Detection - Sobel'),
+            ('edge_canny', 'Edge Detection - Canny'),
+            ('edge_prewitt', 'Edge Detection - Prewitt'),
+            ('edge_laplacian', 'Edge Detection - Laplacian'),
+            ('edge_log', 'Edge Detection - Laplacian of Gaussian'),
+            ('edge_robinson', 'Edge Detection - Robinson Compass'),
             ('histogram_eq', 'Histogram Equalization'),
             ('custom', 'Custom Convolution'),
         ]
@@ -22,9 +29,19 @@ class ImageUploadForm(forms.Form):
     custom_kernel = forms.CharField(
         label='Custom Kernel (comma-separated, row-major)',
         required=False,
-        help_text='Example for 3x3: 1,1,1,1,1,1,1,1,1'
+        help_text='Example for 3x3: 1,1,1,1,1,1,1,1,1',
+        widget=forms.TextInput(attrs={'placeholder': '1,1,1,1,1,1,1,1,1'})
     )
     continue_filtering = forms.BooleanField(
         label='Continue filtering with current result',
-        required=False
+        required=False,
+        initial=True
+    )
+    edge_threshold = forms.FloatField(
+        label='Edge Threshold (for Canny)',
+        required=False,
+        initial=0.33,
+        min_value=0.0,
+        max_value=1.0,
+        widget=forms.NumberInput(attrs={'step': '0.05'})
     )
